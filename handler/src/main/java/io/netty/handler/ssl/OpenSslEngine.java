@@ -190,6 +190,14 @@ public final class OpenSslEngine extends SSLEngine {
                   boolean clientMode, OpenSslSessionContext sessionContext,
                   OpenSslApplicationProtocolNegotiator apn, OpenSslEngineMap engineMap,
                   boolean rejectRemoteInitiatedRenegation) {
+        this(sslCtx, alloc, clientMode, sessionContext, apn, engineMap, rejectRemoteInitiatedRenegation, null, -1);
+    }
+
+    OpenSslEngine(long sslCtx, ByteBufAllocator alloc,
+                  boolean clientMode, OpenSslSessionContext sessionContext,
+                  OpenSslApplicationProtocolNegotiator apn, OpenSslEngineMap engineMap,
+                  boolean rejectRemoteInitiatedRenegation, String peerHost, int peerPort) {
+        super(peerHost, peerPort);
         OpenSsl.ensureAvailability();
         if (sslCtx == 0) {
             throw new NullPointerException("sslCtx");
@@ -1465,12 +1473,12 @@ public final class OpenSslEngine extends SSLEngine {
 
         @Override
         public String getPeerHost() {
-            return null;
+            return OpenSslEngine.this.getPeerHost();
         }
 
         @Override
         public int getPeerPort() {
-            return 0;
+            return OpenSslEngine.this.getPeerPort();
         }
 
         @Override
